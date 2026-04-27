@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { LayoutGrid, Map as MapIcon, SplitSquareHorizontal, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,9 +12,15 @@ type View = "list" | "map" | "split";
 
 const Listings = () => {
   const garages = useAppStore((s) => s.garages);
-  const [query, setQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [view, setView] = useState<View>("split");
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q !== null) setQuery(q);
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
