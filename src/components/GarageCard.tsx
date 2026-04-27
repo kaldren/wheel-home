@@ -7,9 +7,11 @@ import { cn } from "@/lib/utils";
 export const GarageCard = ({
   garage,
   className,
+  distanceKm,
 }: {
   garage: Garage;
   className?: string;
+  distanceKm?: number;
 }) => {
   return (
     <Link
@@ -48,8 +50,16 @@ export const GarageCard = ({
           <MapPin className="h-3.5 w-3.5" />
           <span className="truncate">{garage.city}</span>
           <span>·</span>
-          <Maximize2 className="h-3.5 w-3.5" />
-          <span className="truncate">{sizeText(garage.size).split(" ·")[0]}</span>
+          {typeof distanceKm === "number" ? (
+            <span className="truncate font-medium text-foreground">
+              {distanceKm < 1 ? `${Math.round(distanceKm * 1000)} m` : `${distanceKm.toFixed(1)} km`} away
+            </span>
+          ) : (
+            <>
+              <Maximize2 className="h-3.5 w-3.5" />
+              <span className="truncate">{sizeText(garage.size).split(" ·")[0]}</span>
+            </>
+          )}
         </div>
         <p className="pt-1">
           <span className="font-display font-bold text-base">€{garage.pricePerDay}</span>
